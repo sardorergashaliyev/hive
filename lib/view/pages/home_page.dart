@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       Text(
-                        'Name: ${box?.values.elementAt(index)}',
+                        'Name: ${box?.values.elementAt(index).name}',
                         style:
                             const TextStyle(color: Colors.white, fontSize: 25),
                       ),
