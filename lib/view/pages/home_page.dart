@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_lesson/model/person_model/person_data.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -34,12 +37,14 @@ class _HomePageState extends State<HomePage> {
           ),
           actions: [
             ElevatedButton(
-              onPressed: () {
-                box?.put(
-                  DateTime.now().toString(),
-                  Person(name: name.text, age: num.tryParse(age.text) ?? 0),
+              onPressed: () async {
+                var res = await http.get(
+                  Uri.parse('https://api.genderize.io/?name=${name.text}'),
                 );
+                Person newPerson = Person.fromJson(jsonDecode(res.body));
+                box?.put(name.text, newPerson);
                 setState(() {});
+                // ignore: use_build_context_synchronously
                 Navigator.pop(context);
                 name.clear();
               },
@@ -83,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                             const TextStyle(color: Colors.white, fontSize: 25),
                       ),
                       Text(
-                        'Name: ${box?.values.elementAt(index).age}',
+                        'Name: ${box?.values.elementAt(index).count}',
                         style:
                             const TextStyle(color: Colors.white, fontSize: 25),
                       ),
